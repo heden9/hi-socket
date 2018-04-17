@@ -1,18 +1,21 @@
 'use strict';
-const { getSocketIdByUserId } = require('../../util');
 module.exports = app => {
   class Controller extends app.Controller {
-    async enter() {
-      const message = this.ctx.args[0];
-      console.log('chat :', message, process.pid);
-    }
     async chat_send_msg() {
       const { sentId, receivedId, messages } = this.ctx.args[0];
-      const socketIdSent = getSocketIdByUserId(sentId);
-      const socketIdRece = getSocketIdByUserId(receivedId);
+      const nsp = app.io.of('/');
+      const socket = this.ctx.socket;
       const time = new Date().getTime();
-      await this.ctx.socket.nsp.to(socketIdRece[0]).emit('chat_received_msg', { type: 'received', messages, time, sentId });
-      await this.ctx.socket.nsp.to(socketIdSent[0]).emit('chat_received_msg', { type: 'sent', messages, time });
+      const data = { messages, time, sentId, receivedId };
+      this.ctx.service.chat.saveRecord(sentId, receivedId, data);
+      nsp.emit(receivedId, { role: 'callee', data });
+      socket.emit(sentId, { role: 'caller', data });
+    }
+    async load_msg() {
+      const { sentId, receivedId } = this.ctx.args[0];
+      const socket = this.ctx.socket;
+      const msgRecord = await this.ctx.service.chat.loadRecord(sentId, receivedId);
+      socket.emit('load_msg', msgRecord);
     }
   }
   return Controller;

@@ -5,6 +5,8 @@
   "private": true,
   "dependencies": {
     "egg": "^2.2.1",
+    "egg-redis": "^2.0.0",
+    "egg-rpc": "^1.5.1",
     "egg-scripts": "^2.5.0",
     "egg-socket.io": "^4.0.7"
   },
@@ -22,10 +24,10 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-hi-socket",
-    "stop": "egg-scripts stop --title=egg-server-hi-socket",
-    "dev": "egg-bin dev",
-    "debug": "egg-bin debug --cluster",
+    "start": "egg-scripts start --daemon --title=egg-server-hi-socket --sticky",
+    "stop": "egg-scripts stop --title=egg-server-hi-socket --sticky",
+    "dev": "egg-bin dev --sticky",
+    "debug": "egg-bin debug --sticky",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",

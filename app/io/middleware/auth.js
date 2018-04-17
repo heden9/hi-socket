@@ -1,15 +1,12 @@
 'use strict';
-const { addSocketId, deleteSocketId } = require('../../util');
-module.exports = () => {
+module.exports = app => {
   return async (ctx, next) => {
-    const socketId = ctx.socket.id;
-    const tokenId = ctx.handshake.query.token;
-    const userId = ctx.handshake.query.userId;
-    addSocketId({ tokenId, userId, socketId });
-    ctx.socket.emit('res', 'connected!');
+    const userId = ctx.userId = ctx.handshake.query.userId;
+    await app.redis.sadd('userId', userId);
+    console.log('#user_info', process.pid, userId);
     await next();
-    deleteSocketId(socketId);
     // execute when disconnect.
+    await app.redis.srem('userId', userId);
     console.log('disconnection!');
   };
 };
