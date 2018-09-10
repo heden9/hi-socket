@@ -1,6 +1,36 @@
 {
   "extends": "eslint-config-egg",
   "rules": {
-    "valid-jsdoc": [0],
+    "valid-jsdoc": "off",
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "if", "next": "*" },
+      { "blankLine": "never", "prev": "if", "next": "return" },
+      { "blankLine": "always", "prev": "*", "next": "if" },
+      { "blankLine": "always", "prev": "directive", "next": "*" },
+      { "blankLine": "any", "prev": "directive", "next": "directive" }
+    ],
+    "no-else-return": [
+      "error",
+      { "allowElseIf": false }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      { "max": 1 }
+    ],
+    "padded-blocks": [
+      "error",
+      "never"
+    ],
+    "object-curly-newline": [
+      "error",
+      { "minProperties": 2 }
+    ],
+    "brace-style": [
+      "error",
+      "1tbs",
+      { "allowSingleLine": false }
+    ],
+    "curly": ["error"]
   }
 }
